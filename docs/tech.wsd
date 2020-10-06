@@ -21,7 +21,7 @@ if "Check output mutex" then
 -down->[read]"Output text buffer"
 -down-> "Update game screen"
 if "Game is running" then
--right->[yes]"Output thread"
+-left->[yes]"Output thread"
 else
 ->[no] ===B2===
 ' -down-> ===B2===
