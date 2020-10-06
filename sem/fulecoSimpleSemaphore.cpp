@@ -32,15 +32,15 @@ bool remove_semaphore(std::string name){
 // Check if semaphore is available and wait for it. Decreases availability.
 bool wait(std::string name){
   if(fulss::sem_collection.find(name) == fulss::sem_collection.end()) return false;
-  while(fulss::sem_collection[name].second == 0);
-  fulss::sem_collection[name].second--;
+  while(fulss::sem_collection[name].second == 0){};
+  (fulss::sem_collection[name].second)--;
   return true;
 }
 
 // Releases availability for semaphore.
 bool uncommit(std::string name){
   if(fulss::sem_collection.find(name) == fulss::sem_collection.end()) return false;
-  fulss::sem_collection[name].second = fulss::sem_collection[name].second + 1 > fulss::sem_collection[name].first? fulss::sem_collection[name].first : fulss::sem_collection[name].second + 1;
+  fulss::sem_collection[name].second = (fulss::sem_collection[name].second + 1 > fulss::sem_collection[name].first)? fulss::sem_collection[name].first : fulss::sem_collection[name].second + 1;
   return true;
 }
 
