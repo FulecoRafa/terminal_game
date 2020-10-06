@@ -7,7 +7,7 @@ partition Input {
 -down-> "Capture input"
 User-right-> "Capture input"
 if "Check input mutex" then
--right->[write] "Input Data Structure"
+-down->[write] "Input Data Structure"
 if "Game is running"then
 -up->[yes] "Input thread"
 else
