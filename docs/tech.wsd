@@ -1,0 +1,50 @@
+@startuml thread_diagram
+
+(*) -down-> ===B1===
+===B2===-down->(*)
+partition Input {
+===B1===-down--> "Input thread"
+-down-> "Capture input"
+User-right-> "Capture input"
+if "Check input mutex" then
+-right->[write] "Input Data Structure"
+if "Game is running"then
+-up->[yes] "Input thread"
+else
+-down->[no] ===B2===
+' -down-> ===B2===
+}
+
+partition Output {
+===B1===-down--> "Output thread"
+if "Check output mutex" then
+-down->[read]"Output text buffer"
+-down-> "Update game screen"
+if "Game is running" then
+-right->[yes]"Output thread"
+else
+->[no] ===B2===
+' -down-> ===B2===
+}
+
+partition Game {
+===B1===-down--> "Game thread"
+-down->"Get input"
+if "Check input mutex" then
+-left-->[read] "Input Data Structure"
+else
+-down->[got input] "Game logic"
+-down-> "Write new game state"
+if "Check output mutex" then
+-right->[write] "Output text buffer"
+else
+if "Game is running" then
+-up->[yes] "Game thread"
+else
+-down->[no] ===B2===
+}
+
+' "Input thread" -[hidden]> "Game thread"
+"Game thread" -[hidden]> "Output thread"
+
+@enduml
