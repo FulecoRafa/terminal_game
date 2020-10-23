@@ -4,9 +4,9 @@
 
 #include "character.h"
 
-bool Character::canMove(::Position new_position, Map map) {
+bool Character::canMove(::Position newPosition, Map map) {
   // @TODO treat collision with other characters (players/monsters)
-  switch (map.getTerrainInPosition(new_position)) {
+  switch (map.getTerrainInPosition(newPosition)) {
     case EMPTY:
       return true;
     default:
@@ -14,30 +14,26 @@ bool Character::canMove(::Position new_position, Map map) {
   }
 }
 
-void Character::move(int direction, Map map) {
-  ::Position newPosition{};
+void Character::move(int direction, const Map &map) {
+
   switch (direction) {
     case UP: {
-      newPosition.x = this->position.x;
-      newPosition.y = this->position.y - 1;
+      Position newPosition = Position(this->position.y - 1, this->position.x);
       if (canMove(newPosition, map)) this->position = newPosition;
       return;
     }
     case DOWN: {
-      newPosition.x = this->position.x;
-      newPosition.y = this->position.y + 1;
+      Position newPosition = Position(this->position.y + 1, this->position.x);
       if (canMove(newPosition, map)) this->position = newPosition;
       return;
     }
     case LEFT: {
-      newPosition.x = this->position.x - 1;
-      newPosition.y = this->position.y;
+      Position newPosition = Position(this->position.y, this->position.x - 1);
       if (canMove(newPosition, map)) this->position = newPosition;
       return;
     }
     case RIGHT: {
-      newPosition.x = this->position.x + 1;
-      newPosition.y = this->position.y;
+      Position newPosition = Position(this->position.y, this->position.x + 1);
       if (canMove(newPosition, map)) this->position = newPosition;
       return;
     }
@@ -47,4 +43,39 @@ void Character::move(int direction, Map map) {
   }
 }
 
+void Character::useItem(const Item &item) {
+  switch (item.type) {
+    case HEAL: {
+      status.hp += item.value;
+      return;
+    }
+    case ATK_POWER: {
+      status.attack += item.value;
+      return;
+    }
+    case DEF_POWER: {
+      status.defense += item.value;
+      return;
+    }
+    case MANA_HEAL: {
+      status.mp += item.value;
+      return;
+    }
+    default: {
+      return;
+    }
+  }
+}
 
+Character::Character(Position _position, Status _status) : position(_position), status(_status) {
+  status = _status;
+  position = _position;
+}
+
+Status::Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier) {
+  attack = _attack;
+  defense = _defense;
+  mp = _mp;
+  specialAbilityMultiplier = _specialAbilityMultiplier;
+  hp = _hp;
+}

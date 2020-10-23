@@ -2,38 +2,35 @@
 #include <thread>
 #include <chrono>
 #include "fulecoSimpleSemaphore.h"
+#include "map.h"
+#include "item.h"
+#include "character.h"
+#include "output.h"
+#include "position.h"
 
-std::chrono::seconds times[3] = {std::chrono::seconds(3), std::chrono::seconds(2), std::chrono::seconds(2)};
+#define MONSTER_EASY Status(2, 1, 5, 0, 1)
+#define MONSTER_MEDIUM Status(5, 3, 10, 3, 1.2)
+#define MONSTER_HARD Status(10, 6, 20, 5, 1.5)
 
-void print_after_time(std::chrono::seconds time, int thread_num) {
-  fulss::lock("stdout_lock");
-  std::cout << thread_num + 1 << " started\n";
-  fulss::unlock("stdout_lock");
-  std::this_thread::sleep_for(time);
-  fulss::lock("stdout_lock");
-  std::cout << thread_num + 1 << " finished\n";
-  fulss::unlock("stdout_lock");
-
-  fulss::uncommit("thread_count");
-
-}
+#define DEFAULT_PLAYER Status(6, 1, 20, 3, 1.5)
 
 int main() {
-  int n_threads = 3;
-  int thread_limit = 2;
-  fulss::create_mutex("stdout_lock");
-  fulss::create_semaphore("thread_count", thread_limit);
-  fulss::wait("thread_count");
-  std::thread threads[3];
-  for (int i = 0; i < n_threads; i++) {
-    fulss::wait("thread_count");
-    threads[i] = std::thread(print_after_time, times[i % 3], i);
-  }
-  for (auto &thread : threads) {
-    thread.join();
-  }
+  Map map = Map();
+  Character player = Character(Position(MAP_SIZE_Y - 2, MAP_SIZE_X / 2), DEFAULT_PLAYER);
+  std::vector<Character> monsters = {
+    Character(Position(3, 7), MONSTER_EASY),
+    Character(Position(9, MAP_SIZE_X - 12), MONSTER_EASY),
+    Character(Position(MAP_SIZE_Y / 2, MAP_SIZE_X / 2), MONSTER_EASY),
+  };
+  std::vector<Item> items = {
+    Item(Position(5, MAP_SIZE_X - 31), ATK_POWER, 4, "Long Sword")
+  };
+  map.readMap(MAP_1);
 
-  std::cout << "Main thread finshed\n";
-
+  for (int i = 0; i < 10; i++) {
+    Output::printCurrentFrame(map, player, monsters, items);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    player.move(UP, map);
+  }
   return 0;
 }

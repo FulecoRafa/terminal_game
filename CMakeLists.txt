@@ -10,6 +10,12 @@ add_executable(terminal_game
         src/character.h
         src/fulecoSimpleSemaphore.cpp
         src/fulecoSimpleSemaphore.h
+        src/item.cpp
+        src/item.h
         src/main.cpp
         src/map.cpp
-        src/map.h)
+        src/map.h
+        src/output.cpp
+        src/output.h
+        src/position.cpp
+        src/position.h)

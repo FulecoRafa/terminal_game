@@ -5,14 +5,17 @@
 #ifndef TERMINAL_GAME_MAP_H
 #define TERMINAL_GAME_MAP_H
 
-#define MAP_SIZE_X 200
-#define MAP_SIZE_Y 100
 
-class Position {
-  public:
-    int x;
-    int y;
-};
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <array>
+#include "position.h"
+
+
+#define MAP_SIZE_X 86
+#define MAP_SIZE_Y 17
 
 enum TerrainType {
   EMPTY = ' ',
@@ -20,12 +23,15 @@ enum TerrainType {
   OUTSIDE = '-',
 };
 
-class Map {
-  private:
-    char terrain[MAP_SIZE_X][MAP_SIZE_Y];
+enum MapTypes {
+  MAP_1 = 1
+};
 
+class Map {
   public:
-    char getTerrainInPosition(Position position);
+  std::vector<std::string> terrain;
+  unsigned char getTerrainInPosition(Position position);
+  void readMap(MapTypes type);
 };
 
 
