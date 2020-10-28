@@ -21,6 +21,12 @@ map.o: position.o
 position.o:
 	g++ $(flags) -c position.cpp -o position.o
 
+semaphore: fulecoSimpleSemaphore.o
+	g++ $(flags) semTest.cpp $^ -o sem
+
+fulecoSimpleSemaphore.o:
+	g++ $(flags) -c fulecoSimpleSemaphore.cpp -o $@
+
 clean:
 	@rm -rf *.o
 	@rm -rf test

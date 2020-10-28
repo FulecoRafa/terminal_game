@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <atomic>
 
 namespace fulss{
 
@@ -10,8 +11,8 @@ namespace fulss{
 
   bool create_semaphore(std::string name, unsigned int slots);
   bool remove_semaphore(std::string name);
-  bool wait(std::string name);
-  bool uncommit(std::string name);
+  bool down(std::string name);
+  bool up(std::string name);
 
   // Mutex
 

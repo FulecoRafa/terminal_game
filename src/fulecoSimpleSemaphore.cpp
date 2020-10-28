@@ -3,8 +3,8 @@
 namespace fulss{
   
 // Keeps a list of all semaphores in structure name:{first:max, second:value}
-std::unordered_map<std::string, std::pair<unsigned int, unsigned int>> sem_collection;
-std::unordered_map<std::string, bool> mutex_collection;
+std::unordered_map<std::string, std::pair<std::atomic<unsigned int>, unsigned int>> sem_collection;
+std::unordered_map<std::string, std::atomic<bool>> mutex_collection;
 
 /************
  * SEMAPHORES
@@ -30,7 +30,7 @@ bool remove_semaphore(std::string name){
 }
 
 // Check if semaphore is available and wait for it. Decreases availability.
-bool wait(std::string name){
+bool down(std::string name){
   if(fulss::sem_collection.find(name) == fulss::sem_collection.end()) return false;
   while(fulss::sem_collection[name].second == 0){};
   (fulss::sem_collection[name].second)--;
@@ -38,9 +38,9 @@ bool wait(std::string name){
 }
 
 // Releases availability for semaphore.
-bool uncommit(std::string name){
+bool up(std::string name){
   if(fulss::sem_collection.find(name) == fulss::sem_collection.end()) return false;
-  fulss::sem_collection[name].second = (fulss::sem_collection[name].second + 1 > fulss::sem_collection[name].first)? fulss::sem_collection[name].first : fulss::sem_collection[name].second + 1;
+  fulss::sem_collection[name].second = (fulss::sem_collection[name].second + 1 > fulss::sem_collection[name].first)? (unsigned int) fulss::sem_collection[name].first : fulss::sem_collection[name].second + 1;
   return true;
 }
 
