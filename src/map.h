@@ -18,7 +18,7 @@
 #define MAP_SIZE_Y 17
 
 enum TerrainType {
-  EMPTY = ' ',
+  EMPTY = '.',
   WALL = '#',
   OUTSIDE = '-',
 };
