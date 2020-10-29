@@ -30,3 +30,4 @@ fulecoSimpleSemaphore.o:
 clean:
 	@rm -rf *.o
 	@rm -rf test
+	@rm -rf sem

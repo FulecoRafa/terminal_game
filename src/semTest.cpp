@@ -2,7 +2,6 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-// #include <mutex>
 #include "fulecoSimpleSemaphore.h"
 
 std::chrono::seconds times[3] = {std::chrono::seconds(3), std::chrono::seconds(2), std::chrono::seconds(2)};
@@ -12,10 +11,10 @@ void print_after_time(std::chrono::seconds time, int thread_num){
 	std::cout<<thread_num+1<<" started\n";
 	fulss::unlock("stdout_lock");
 	std::this_thread::sleep_for(time);
-	// mtx.lock();
+
 	fulss::lock("stdout_lock");
 	std::cout<<thread_num+1<<" finished\n";
-	// mtx.unlock();
+
 	fulss::unlock("stdout_lock");
   
 		fulss::up("thread_count");

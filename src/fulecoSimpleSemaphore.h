@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 #include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 namespace fulss{
 
