@@ -41,10 +41,48 @@ namespace fulss{
     std::mutex mtx;
     std::unique_lock<std::mutex> lock;
   };
+  class Mtx_data {
+  public:
+    std::atomic<bool> value;
+    std::condition_variable cv;
+
+    Mtx_data(){
+      this->value = true;
+      this->lck = std::unique_lock<std::mutex>(this->mtx);
+    }
+
+    void operator=(bool v){
+      this->value = v;
+    }
+
+    void lock(){
+      this->value = false;
+    }
+
+    void unlock(){
+      this->value = true;
+    }
+
+    bool locked(){
+      return this->value == false;
+    }
+
+    void sleep(){
+      this->cv.wait(this->lck);
+    }
+
+    void wakeup(){
+      this->cv.notify_one();
+    }
+  
+  private:
+    std::mutex mtx;
+    std::unique_lock<std::mutex> lck;
+  };
   
 // Keeps a list of all semaphores in structure name:{first:max, second:value}
 std::unordered_map<std::string, fulss::Sem_data> sem_collection;
-std::unordered_map<std::string, std::atomic<bool>> mutex_collection;
+std::unordered_map<std::string, fulss::Mtx_data> mutex_collection;
 
 /************
  * SEMAPHORES
@@ -111,15 +149,16 @@ bool remove_mutex(std::string name){
 // Locks mutex.
 bool lock(std::string name){
   if(fulss::mutex_collection.find(name) == fulss::mutex_collection.end()) return false;
-  while(!fulss::mutex_collection[name]);
-  fulss::mutex_collection[name] = false;
+  while(fulss::mutex_collection[name].locked()) fulss::mutex_collection[name].sleep();
+  fulss::mutex_collection[name].lock();
   return true;
 }
 
 // Unlocks mutex.
 bool unlock(std::string name){
   if(fulss::mutex_collection.find(name) == fulss::mutex_collection.end()) return false;
-  fulss::mutex_collection[name] = true;
+  fulss::mutex_collection[name].unlock();
+  fulss::mutex_collection[name].wakeup();
   return true;
 }
 
