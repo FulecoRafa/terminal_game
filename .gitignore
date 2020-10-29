@@ -2,4 +2,7 @@
 cmake-build-debug
 src/*.o
 src/test
-src/sem
+semaphore/test
+semaphore/bin
+input_capture/bin
+input_capture/test
