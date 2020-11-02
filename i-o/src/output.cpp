@@ -136,6 +136,8 @@ void drawDinamic(){
   attron(COLOR_PAIR(4));
   printw("   Deffense: ");
   printw("%3d", deff);
+
+  refresh();
 }
 
 void endLib(){

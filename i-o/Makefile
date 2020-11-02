@@ -1,16 +1,16 @@
 flags=-g -fsanitize=address
 
-build: folders semaphore
+build: folders menu
 
-semaphore: fulecoSimpleSemaphore.o
-	g++ $(flags) src/semTest.cpp bin/$^ -o test/sem
+menu: output.o
+	g++ $(flags) src/test.cpp bin/$^ -o test/menu -lncurses
 
-fulecoSimpleSemaphore.o:
-	g++ $(flags) -c src/fulecoSimpleSemaphore.cpp -o bin/$@
+output.o:
+	g++ $(flags) -c src/output.cpp -o bin/$@ -lncurses
 
 folders:
-	[-d test] || mkdir test
-	[-d bin] || mkdir bin
+	[ -d test ] || mkdir test
+	[ -d bin ] || mkdir bin
 
 clean:
 	@rm -rf bin
