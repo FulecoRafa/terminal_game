@@ -14,8 +14,8 @@
 #include "position.h"
 
 
-#define MAP_SIZE_X 86
-#define MAP_SIZE_Y 17
+#define MAP_SIZE_X 68
+#define MAP_SIZE_Y 18
 
 enum TerrainType {
   EMPTY = '.',

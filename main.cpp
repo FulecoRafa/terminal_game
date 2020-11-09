@@ -5,8 +5,8 @@
 #include "src/map.h"
 #include "src/item.h"
 #include "src/character.h"
-#include "src/output.h"
 #include "src/position.h"
+#include "io/src/io.h"
 
 #define MONSTER_EASY Status(2, 1, 5, 0, 1)
 #define MONSTER_MEDIUM Status(5, 3, 10, 3, 1.2)
@@ -15,6 +15,8 @@
 #define DEFAULT_PLAYER Status(6, 1, 20, 3, 1.5)
 
 int main() {
+  // Initializing game objects
+  int score = 0;
   Map map = Map();
   Character player = Character(Position(MAP_SIZE_Y - 2, MAP_SIZE_X / 2), DEFAULT_PLAYER);
   std::vector<Character> monsters = {
@@ -27,10 +29,25 @@ int main() {
   };
   map.readMap(MAP_1);
 
+  // Output setup
+  fulio::Outbuff screen;
+  screen.startLib();
+  screen.drawMenu();
+
+  // Output
   for (int i = 0; i < 10; i++) {
-    Output::printCurrentFrame(map, player, monsters, items);
+    screen.drawDinamic(map, player, score, monsters, items);
     std::this_thread::sleep_for(std::chrono::seconds(1));
     player.move(UP, map);
+    std::string message = "You walked up ";
+    message += std::to_string(i);
+    message += " times!";
+    screen.setMsg(message);
+    score += 10;
   }
+
+  // End output lib
+  screen.endLib();
+
   return 0;
 }

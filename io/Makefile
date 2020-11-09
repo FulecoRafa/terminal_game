@@ -1,12 +1,9 @@
 flags=-g -fsanitize=address
 
-build: folders menu
-
-menu: output.o
-	g++ $(flags) src/test.cpp bin/$^ -o test/menu -lncurses
+build: folders output.o
 
 output.o:
-	g++ $(flags) -c src/output.cpp -o bin/$@ -lncurses
+	g++ $(flags) -c src/output.cpp ../src/bin/*.o -o bin/$@
 
 folders:
 	[ -d test ] || mkdir test

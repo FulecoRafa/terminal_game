@@ -9,8 +9,8 @@ fulecoSimpleSemaphore.o:
 	g++ $(flags) -c src/fulecoSimpleSemaphore.cpp -o bin/$@
 
 folders:
-	[-d test] || mkdir test
-	[-d bin] || mkdir bin
+	[ -d test ] || mkdir test
+	[ -d bin ] || mkdir bin
 
 clean:
 	@rm -rf bin

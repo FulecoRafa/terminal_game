@@ -10,13 +10,16 @@ unsigned char Map::getTerrainInPosition(Position position) {
 }
 
 void Map::readMap(MapTypes type) {
-  std::vector<std::string> map(MAP_SIZE_Y);
+  std::vector<std::string> map(MAP_SIZE_Y, "");
   int i = 0;
   std::string line;
-  std::ifstream mapFile("../src/maps/map_1.txt");
+  std::ifstream mapFile("src/maps/map_1.txt");
   if (mapFile.is_open()) {
     while (getline(mapFile, map[i])) i++;
     mapFile.close();
+  }else{
+    printf("Map file not found");
+    exit(1);
   }
   terrain = map;
 }

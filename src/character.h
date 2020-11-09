@@ -33,11 +33,11 @@ class Character {
   private:
 
 
-  Status status;
-
   bool canMove(::Position new_position, Map map);
 
   public:
+  Status status;
+
   void move(int direction, const Map &map);
 
   void useItem(const Item &item);

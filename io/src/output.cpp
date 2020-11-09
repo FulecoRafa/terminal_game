@@ -1,5 +1,10 @@
 #include "output.h"
 
+namespace fulio {
+
+#define MAX_MAP 1224
+#define MAX_MSG 175
+
 void drawBox(int y, int x, int height, int width){
 
   // Create box borders
@@ -16,7 +21,7 @@ void drawBox(int y, int x, int height, int width){
 
 }
 
-bool startLib(){
+bool Outbuff::startLib(){
   initscr();
   raw();
   noecho();
@@ -44,10 +49,16 @@ Please resize your terminal and run game again...\n", my, mx);
   init_pair(3, COLOR_GREEN, -1);
   init_pair(4, COLOR_BLUE, -1);
 
+  // Window setup
+ msgwin = newwin(5, 35, 16, 77);
+ mapwin = newwin(18, 68, 3, 3);
+
+  // Final Setup
+
   return true;
 }
 
-void drawMenu(){
+void Outbuff::drawMenu(){
   // Creating boxes
   attron(A_DIM);
   drawBox(2, 2, 20, 70); // Map
@@ -85,27 +96,29 @@ void drawMenu(){
 
 }
 
-void drawDinamic(){
+void Outbuff::drawDinamic(Map &map, Character &player, int &score, std::vector<Character> &monsters, std::vector<Item> items){
   // Access critical region to get info for display
   // CRITICAL REGION START
-  int score = 25;
-  int health = 900;
-  int mana = 1100;
-  int atk = 20, deff = 10;
+  int lscore = score;
+  int lhealth = player.status.hp;
+  int lmana = player.status.mp;
+  int atk = player.status.attack, deff = player.status.defense;
+  std::vector<std::string> aux_terrain = map.terrain;
   //CRITICAL REGION END
-  
+
   // Print numbers to titles
-  mvprintw(2, 15, "%03d", score); // score
-  mvprintw(4, 88, "%03d", health); // health
-  mvprintw(8, 86, "%03d", mana); // mana
+  attron(COLOR_PAIR(3));
+  mvprintw(2, 15, "%03d", lscore); // lscore
+  mvprintw(4, 88, "%03d", lhealth); // lhealth
+  mvprintw(8, 86, "%03d", lmana); // lmana
   
-  // Health Bar
+  // lhealth Bar
   int starty = 5, startx = 78;
   move(starty, startx);
   for (int i = 0 ; i < 4 ; i++){
     attron(COLOR_PAIR(i + 1));
     for (int j = 0 ; j < 340 ; j += 10){
-      if (340 * i + j < health) addch('|');
+      if (340 * i + j < lhealth) addch('|');
       else move(starty, startx + 1);
       startx++;
     }
@@ -114,13 +127,13 @@ void drawDinamic(){
   }
   attroff(COLOR_PAIR(3));
 
-  // Mana Bar
+  // lmana Bar
   starty = 9, startx = 78;
   move(starty, startx);
   for (int i = 0 ; i < 4 ; i++){
     attron(COLOR_PAIR(i + 1));
     for (int j = 0 ; j < 340 ; j += 10){
-      if (340 * i + j < mana) addch('|');
+      if (340 * i + j < lmana) addch('|');
       else move(starty, startx + 1);
       startx++;
     }
@@ -136,10 +149,42 @@ void drawDinamic(){
   attron(COLOR_PAIR(4));
   printw("   Deffense: ");
   printw("%3d", deff);
+  attroff(COLOR_PAIR(4));
+
+  // Printing map
+  wclear(mapwin);
+  aux_terrain[player.position.y][player.position.x] = 'P';
+  for (Character monster : monsters) {
+    aux_terrain[monster.position.y][monster.position.x] = 'M';
+  }
+  for (const Item &item : items) {
+    aux_terrain[item.position.y][item.position.x] = 'I';
+  }
+  for (std::string line : aux_terrain) {
+    wprintw(mapwin, "%s", line.c_str());
+  }
+  //for (int i = 0; i < MAP_SIZE_Y; i++) {
+    //for (int j = 0; j < MAP_SIZE_X; j++) {
+      //wprintw(mapwin, "%c", aux_terrain[i][j]);
+    //}
+  //}
+  wrefresh(mapwin);
 
   refresh();
+
 }
 
-void endLib(){
+void Outbuff::setMsg(std::string newMsg) {
+  if (newMsg.length() <= MAX_MSG){
+    wclear(msgwin);
+    wprintw(msgwin, newMsg.c_str());
+    wrefresh(msgwin);
+  }
+}
+
+void Outbuff::endLib(){
+  delwin(mapwin);
+  delwin(msgwin);
   endwin();
+}
 }
