@@ -15,7 +15,7 @@
 
 
 #define MAP_SIZE_X 68
-#define MAP_SIZE_Y 18
+#define MAP_SIZE_Y 19
 
 enum TerrainType {
   EMPTY = '.',

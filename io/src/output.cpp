@@ -51,7 +51,7 @@ Please resize your terminal and run game again...\n", my, mx);
 
   // Window setup
  msgwin = newwin(5, 35, 16, 77);
- mapwin = newwin(18, 68, 3, 3);
+ mapwin = newwin(19, 68, 3, 3);
 
   // Final Setup
 
