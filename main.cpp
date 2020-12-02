@@ -31,8 +31,10 @@ int main() {
 
   // Output setup
   fulio::Outbuff screen;
+  fulio::InBuff input;
   screen.startLib();
   screen.drawMenu();
+  input.start();
 
   // Output
   for (int i = 0; i < 10; i++) {
@@ -42,11 +44,16 @@ int main() {
     std::string message = "You walked up ";
     message += std::to_string(i);
     message += " times!";
+    fulio::inputStructure activeInputs = input.getInputs();
+    for (int j = 0 ; j < 8 ; j++) {
+      message += activeInputs.getInput(j)?'1':'0';
+    }
     screen.setMsg(message);
     score += 10;
   }
 
   // End output lib
+  input.stop();
   screen.endLib();
 
   return 0;

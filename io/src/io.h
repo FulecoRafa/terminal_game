@@ -2,5 +2,6 @@
 #define TERMINAL_GAME_IO
 
 #include "output.h"
+#include "input.h"
 
 #endif

@@ -2,6 +2,9 @@ flags=-g -fsanitize=address
 
 build: folders output.o input.o
 
+test: build
+	g++ $(flags) ./src/test2.cpp ./bin/*.o ../semaphore/bin/fulecoSimpleSemaphore.o -o ./test/input -lncurses
+
 output.o:
 	g++ $(flags) -c src/output.cpp ../src/bin/*.o -o bin/$@
 

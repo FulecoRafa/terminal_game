@@ -23,10 +23,10 @@ void drawBox(int y, int x, int height, int width){
 
 bool Outbuff::startLib(){
   initscr();
-  raw();
+  //raw();
   noecho();
   clear();
-  curs_set(0);
+  //curs_set(0);
 
   // Check window size
   int my, mx;
