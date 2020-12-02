@@ -1,8 +1,6 @@
 .idea
 cmake-build-debug
-src/*.o
-src/test
-semaphore/test
-semaphore/bin
-input_capture/bin
-input_capture/test
+*/*.o
+*/test
+*/bin
+*/test
