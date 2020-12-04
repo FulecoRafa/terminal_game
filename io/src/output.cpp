@@ -24,7 +24,7 @@ void drawBox(int y, int x, int height, int width){
 bool Outbuff::startLib(){
   initscr();
   //raw();
-  noecho();
+  //noecho();
   clear();
   //curs_set(0);
 
@@ -93,6 +93,10 @@ void Outbuff::drawMenu(){
   printw("d: Move Right       ");
   move(24, 45);
   printw("i: Interact");
+  move(24, 65);
+  printw("p: Pause");
+  move(25, 65);
+  printw("q: Quit");
 
 }
 

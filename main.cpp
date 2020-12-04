@@ -29,7 +29,7 @@ int main() {
   };
   map.readMap(MAP_1);
 
-  // Output setup
+  // i/o setup
   fulio::Outbuff screen;
   fulio::InBuff input;
   screen.startLib();
@@ -46,14 +46,14 @@ int main() {
     message += " times!";
     fulio::inputStructure activeInputs = input.getInputs();
     for (int j = 0 ; j < 8 ; j++) {
-      message += activeInputs.getInput(j)?'1':'0';
+      message += activeInputs.getInput(j)?"1":"0";
     }
     screen.setMsg(message);
     score += 10;
   }
 
-  // End output lib
-  input.stop();
+  // End i/o lib
+  //input.stop();
   screen.endLib();
 
   return 0;

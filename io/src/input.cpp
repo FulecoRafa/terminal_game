@@ -1,4 +1,5 @@
 #include "input.h"
+#include <cstdio>
 #include <cstring>
 
 namespace fulio {
@@ -9,7 +10,7 @@ namespace fulio {
   void InBuff::inputLoop(){
     while(active){
       char c;
-      c = getch();
+      c = getchar();
       fulss::lock(SEM_NAME);
       switch ( c ){
         case 'w':
