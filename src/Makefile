@@ -1,4 +1,4 @@
-flags=-g -fsanitize=address
+flags=-g -fsanitize=address -std=c++11
 
 build: folders all
 

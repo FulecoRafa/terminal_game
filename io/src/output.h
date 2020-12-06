@@ -7,7 +7,7 @@
 #include "../../src/position.h"
 
 #ifndef TERMINAL_GAME_OUTPUT
-#define TERMIANL_GAME_OUTPUT
+#define TERMINAL_GAME_OUTPUT
 
 namespace fulio {
   void drawBox(int y, int x, int height, int width);

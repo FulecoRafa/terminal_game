@@ -1,5 +1,8 @@
 game: build
-	g++ -g -fsanitize=address -o game semaphore/bin/fulecoSimpleSemaphore.o src/bin/*.o io/bin/*.o main.cpp -lncurses
+	g++ -std=c++11  -g -fsanitize=address -o game semaphore/bin/fulecoSimpleSemaphore.o src/bin/*.o io/bin/*.o main.cpp -lncurses
+
+clean:
+	rm -rf game *.o
 
 build: semaphore src io
 	make -C semaphore
