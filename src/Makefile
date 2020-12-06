@@ -2,11 +2,8 @@ flags=-g -fsanitize=address -std=c++11
 
 build: folders all
 
-all: output.o character.o item.o map.o position.o
+all: character.o item.o map.o position.o
 	g++ $(flags) main.cpp bin/*.o -o test/test
-
-output.o: map.o character.o
-	g++ $(flags) -c output.cpp -o bin/output.o
 
 character.o: item.o map.o position.o
 	g++ $(flags) -c character.cpp -o bin/character.o

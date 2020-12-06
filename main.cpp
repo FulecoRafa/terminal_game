@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "src/fulecoSimpleSemaphore.h"
+#include "semaphore/src/fulecoSimpleSemaphore.h"
 #include "src/map.h"
 #include "src/item.h"
 #include "src/character.h"
