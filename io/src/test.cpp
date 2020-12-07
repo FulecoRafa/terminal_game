@@ -5,7 +5,7 @@ int main (void) {
   fulio::Outbuff gamescr;
   gamescr.startLib();
   gamescr.drawMenu();
-  gamescr.drawDinamic();
+//  gamescr.drawDinamic();
   getch();
   gamescr.setMsg("First Message");
   getch();

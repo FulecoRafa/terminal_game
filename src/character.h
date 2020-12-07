@@ -32,7 +32,6 @@ class Status {
 class Character {
   private:
 
-
   bool canMove(::Position new_position, Map map);
 
   public:

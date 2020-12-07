@@ -38,7 +38,7 @@ namespace fulio {
           input.setInput(7);
           break;
       }
-      input.setInput(7);
+//      input.setInput(7);
       fulss::unlock(SEM_NAME);
     }
   }
