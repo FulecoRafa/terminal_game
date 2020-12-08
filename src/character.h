@@ -1,8 +1,10 @@
-#include <climits>
 //
 // Created by Gabriel Souza on 23/10/20.
 //
 
+#include <climits>
+#include <string>
+#include <cmath>
 #include "item.h"
 #include "map.h"
 #include "position.h"
@@ -25,6 +27,7 @@ class Status {
   int mp{};
   float specialAbilityMultiplier{};
   int hp{};
+  int xp = 0;
 
   Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier);
 };
@@ -32,19 +35,28 @@ class Status {
 class Character {
   private:
 
-  bool canMove(::Position new_position, Map map);
+  bool canMove(::Position new_position, Map map, std::vector<Character> *otherCharacters, std::vector<Item> *items);
+
+  Position calculateNewPosition(int direction) const;
 
   public:
   Status status;
 
-  void move(int direction, const Map &map);
+  void move(int direction, const Map &map, std::vector<Character> *otherCharacters, std::vector<Item> *items);
 
   void useItem(const Item &item);
 
+  void fight(Character enemy, std::string *message, int *score);
+
   Position position;
+
+  static std::string getMoveMessage(int direction);
 
   Character(Position _position, Status _status);
 
+  bool isEnemyInRange(Character *enemy);
+
+  void lvlUp(std::string *message);
 };
 
 

@@ -8,7 +8,6 @@
 
 namespace fulio {
 #define SEM_NAME "INPUT_LOCK"
-#define ACTION_SIZE 8
 
   enum inTypes {
     UP,

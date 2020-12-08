@@ -28,6 +28,6 @@ add_executable(terminal_game
         src/map.h
         src/position.cpp
         src/position.h
-        main.cpp game.cpp game.h)
+        main.cpp)
 
 target_link_libraries(terminal_game ncurses)
