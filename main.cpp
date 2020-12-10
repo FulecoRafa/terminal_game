@@ -42,9 +42,9 @@ runIA(Map *map, Character *monster, Character *player, std::vector<Character *> 
       }
       fulss::down(CHARACTER_SEM);
       for (int i = 0; i < range; i++) {
-//        fulss::lock(CHARACTER_SEM);
+        fulss::lock(CHARACTER_SEM);
         monster->moveEnemy(path[direction], *map, otherMonsters, items, player);
-//        fulss::unlock(CHARACTER_SEM);
+        fulss::unlock(CHARACTER_SEM);
       }
       fulss::up(CHARACTER_SEM);
       direction = (direction + 1) % 4;
@@ -58,12 +58,10 @@ void runActions(Map *map, Character *player, std::vector<Character *> *monsters,
                 fulio::InBuff *input, bool *isRunning, std::string *message, int *score) {
   bool action;
   int fightingMonster = -1;
-  fulss::down(CHARACTER_SEM);
 
   while (*isRunning) {
-
+    fulss::down(CHARACTER_SEM);
     fulio::inputStructure activeInputs = input->getInputs();
-
     if (activeInputs.getInput(fulio::QUIT)) break;
     if (fightingMonster >= 0) {
       if (activeInputs.getInput(fulio::INTERACT)) {
@@ -72,6 +70,7 @@ void runActions(Map *map, Character *player, std::vector<Character *> *monsters,
         fightingMonster = -1;
       }
     } else {
+
       for (int j = 0; j < 4; j++) { // move actions
         action = activeInputs.getInput(j);
         if (action) {
@@ -91,9 +90,9 @@ void runActions(Map *map, Character *player, std::vector<Character *> *monsters,
         fulss::unlock(CHARACTER_SEM);
       }
     }
+    fulss::up(CHARACTER_SEM);
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
   }
-  fulss::up(CHARACTER_SEM);
 
   *isRunning = false;
 }
