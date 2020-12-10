@@ -100,7 +100,7 @@ Please resize your terminal and run game again...\n", my, mx);
 
   }
 
-  void Outbuff::drawDinamic(Map &map, Character &player, int &score, std::vector<Character> &monsters,
+  void Outbuff::drawDynamic(Map &map, Character &player, int &score, std::vector<Character *> &monsters,
                             std::vector<Item> items) {
     // Access critical region to get info for display
     // CRITICAL REGION START
@@ -159,8 +159,8 @@ Please resize your terminal and run game again...\n", my, mx);
     // Printing map
     wclear(mapwin);
     aux_terrain[player.position.y][player.position.x] = 'H';
-    for (Character monster : monsters) {
-      aux_terrain[monster.position.y][monster.position.x] = 'M';
+    for (Character *monster : monsters) {
+      aux_terrain[monster->position.y][monster->position.x] = 'M';
     }
     for (const Item &item : items) {
       aux_terrain[item.position.y][item.position.x] = '*';

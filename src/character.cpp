@@ -8,9 +8,9 @@ bool hasEntityInPosition(Position newPosition, Position entityPosition) {
   return newPosition.x == entityPosition.x && newPosition.y == entityPosition.y;
 }
 
-bool isOneCharacterInPosition(Position newPosition, const std::vector<Character> &characters) {
+bool isOneCharacterInPosition(Position newPosition, const std::vector<Character *> &characters) {
   for (auto character: characters) {
-    if (hasEntityInPosition(newPosition, character.position)) return true;
+    if (hasEntityInPosition(newPosition, character->position)) return true;
   }
   return false;
 }
@@ -55,7 +55,8 @@ bool Character::isEnemyInRange(Character *enemy) {
 
 
 bool
-Character::canMove(::Position newPosition, Map map, std::vector<Character> *otherCharacters, std::vector<Item> *items) {
+Character::canMove(::Position newPosition, Map map, std::vector<Character *> *otherCharacters,
+                   std::vector<Item> *items) {
   // @TODO treat collision with other characters (players/monsters)
   unsigned char terrainType = map.getTerrainInPosition(newPosition);
   if (terrainType == EMPTY) {
@@ -66,8 +67,17 @@ Character::canMove(::Position newPosition, Map map, std::vector<Character> *othe
   return false;
 }
 
-void Character::move(int direction, const Map &map, std::vector<Character> *otherCharacters, std::vector<Item> *items) {
+void
+Character::move(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items) {
   Position newPosition = this->calculateNewPosition(direction);
+  if (canMove(newPosition, map, otherCharacters, items)) this->position = newPosition;
+}
+
+void Character::moveEnemy(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items,
+                     Character *player) {
+  Position newPosition = this->calculateNewPosition(direction);
+  std::vector<Character> playerAux;
+  playerAux.push_back(*player);
   if (canMove(newPosition, map, otherCharacters, items)) this->position = newPosition;
 }
 
@@ -126,9 +136,9 @@ void Character::lvlUp(std::string *message) {
   }
 }
 
-void Character::fight(Character enemy, std::string *message, int *score) {
-  int attackTimes = floor(enemy.status.hp / (status.attack - enemy.status.defense));
-  int damage = (enemy.status.attack) * attackTimes;
+void Character::fight(Character *enemy, std::string *message, int *score) {
+  int attackTimes = floor(enemy->status.hp / (status.attack - enemy->status.defense));
+  int damage = (enemy->status.attack) * attackTimes;
   status.hp = status.hp - damage;
   if (status.hp < 0) {
     *message = "YOU DIED!!!";

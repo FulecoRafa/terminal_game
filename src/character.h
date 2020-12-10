@@ -35,18 +35,21 @@ class Status {
 class Character {
   private:
 
-  bool canMove(::Position new_position, Map map, std::vector<Character> *otherCharacters, std::vector<Item> *items);
+  bool canMove(::Position new_position, Map map, std::vector<Character *> *otherCharacters, std::vector<Item> *items);
 
   Position calculateNewPosition(int direction) const;
 
   public:
   Status status;
 
-  void move(int direction, const Map &map, std::vector<Character> *otherCharacters, std::vector<Item> *items);
+  void move(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items);
+
+  void moveEnemy(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items,
+            Character *player);
 
   void useItem(const Item &item);
 
-  void fight(Character enemy, std::string *message, int *score);
+  void fight(Character *enemy, std::string *message, int *score);
 
   Position position;
 

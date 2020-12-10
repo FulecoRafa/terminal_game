@@ -13,14 +13,19 @@ namespace fulio {
   void drawBox(int y, int x, int height, int width);
 
   class Outbuff {
-  private:
+    private:
     WINDOW *msgwin;
     WINDOW *mapwin;
-  public:
+    public:
     bool startLib();
+
     void drawMenu();
-    void drawDinamic(Map &map, Character &player, int &score, std::vector<Character> &monsters, std::vector<Item> items);
+
+    void
+    drawDynamic(Map &map, Character &player, int &score, std::vector<Character *> &monsters, std::vector<Item> items);
+
     void setMsg(std::string newMsg);
+
     void endLib();
   };
 }
