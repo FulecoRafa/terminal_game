@@ -5,6 +5,7 @@
 #include <climits>
 #include <string>
 #include <cmath>
+#include <random>
 #include "item.h"
 #include "map.h"
 #include "position.h"
@@ -29,8 +30,9 @@ class Status {
   float specialAbilityMultiplier{};
   int hp{};
   int xp = 0;
+  int lvl{};
 
-  Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier);
+  Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier, int _lvl);
 };
 
 class Character {

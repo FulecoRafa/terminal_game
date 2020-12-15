@@ -160,7 +160,9 @@ Please resize your terminal and run game again...\n", my, mx);
     wclear(mapwin);
     aux_terrain[player.position.y][player.position.x] = 'H';
     for (Character *monster : monsters) {
-      aux_terrain[monster->position.y][monster->position.x] = 'M';
+      if (monster->status.lvl == 1) aux_terrain[monster->position.y][monster->position.x] = '1';
+      else if (monster->status.lvl == 2) aux_terrain[monster->position.y][monster->position.x] = '2';
+      else if (monster->status.lvl == 3) aux_terrain[monster->position.y][monster->position.x] = '3';
     }
     for (const Item &item : items) {
       aux_terrain[item.position.y][item.position.x] = '*';

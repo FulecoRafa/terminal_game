@@ -46,6 +46,7 @@ Position Character::calculateNewPosition(int direction) const {
 };
 
 bool Character::isEnemyInRange(Character *enemy) {
+  if (enemy->status.hp <= 0) return false;
   for (int i = 0; i < 4; i++) {
     Position nextPosition = this->calculateNewPosition(i);
     if (hasEntityInPosition(nextPosition, enemy->position)) return true;
@@ -70,7 +71,10 @@ Character::canMove(::Position newPosition, Map map, std::vector<Character *> *ot
 void
 Character::move(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items) {
   Position newPosition = this->calculateNewPosition(direction);
+  std::string mutexName = "MTX_" + std::to_string(newPosition.y) + "_" + std::to_string(newPosition.x);
+  fulss::lock(mutexName);
   if (canMove(newPosition, map, otherCharacters, items)) this->position = newPosition;
+  fulss::unlock(mutexName);
 }
 
 void
@@ -79,7 +83,10 @@ Character::moveEnemy(int direction, const Map &map, std::vector<Character *> *ot
   Position newPosition = this->calculateNewPosition(direction);
   std::vector<Character> playerAux;
   playerAux.push_back(*player);
+  std::string mutexName = "MTX_" + std::to_string(newPosition.y) + "_" + std::to_string(newPosition.x);
+  fulss::lock(mutexName);
   if (canMove(newPosition, map, otherCharacters, items)) this->position = newPosition;
+  fulss::unlock(mutexName);
 }
 
 void Character::useItem(const Item &item) {
@@ -133,12 +140,14 @@ void Character::lvlUp(std::string *message) {
     status.attack += 1;
     status.defense += 1;
     status.xp = 0;
+    status.lvl = status.lvl + 1;
     *message = *message + "\n" + "You leveled up!";
   }
 }
 
 void Character::fight(Character *enemy, std::string *message, int *score) {
-  int attackTimes = floor(enemy->status.hp / (status.attack - enemy->status.defense));
+  int tickDamage = status.attack - enemy->status.defense <= 0 ? 1 : status.attack - enemy->status.defense;
+  int attackTimes = floor(enemy->status.hp / tickDamage);
   int damage = (enemy->status.attack) * attackTimes;
   status.hp = status.hp - damage;
   if (status.hp < 0) {
@@ -160,17 +169,21 @@ void Character::revive(int *roundsDead) {
 }
 
 void Character::generateEnemyMovement(int *direction, int *step) {
+  std::random_device rd; // obtain a random number from hardware
+  std::mt19937 gen(rd()); // seed the generator
+  std::uniform_int_distribution<> range(0,3); // define the range
   if (*step == 3) { // troca direção
     *step = 0;
-    *direction = (*direction + 1) % 4;
+    *direction = range(gen);
   }
   *step = *step + 1;
 }
 
-Status::Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier) {
+Status::Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier, int _lvl) {
   attack = _attack;
   defense = _defense;
   mp = _mp;
   specialAbilityMultiplier = _specialAbilityMultiplier;
   hp = _hp;
+  lvl = _lvl;
 }

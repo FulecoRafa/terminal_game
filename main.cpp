@@ -9,13 +9,13 @@
 #define FRAME_TIME_IN_MILLIS 60
 #define CHARACTER_SEM "CHARACTER_LOCK"
 
-#define MONSTER_EASY Status(2, 1, 5, 0, 1)
-#define MONSTER_MEDIUM Status(5, 3, 10, 3, 1.2)
-#define MONSTER_HARD Status(10, 6, 20, 5, 1.5)
+#define MONSTER_EASY Status(2, 1, 5, 0, 1, 1)
+#define MONSTER_MEDIUM Status(5, 3, 10, 3, 1.2, 2)
+#define MONSTER_HARD Status(10, 6, 20, 5, 1.5, 3)
 
 #define THREAD_COUNT 13
 
-#define DEFAULT_PLAYER Status(6, 1, 20, 3, 1.5)
+#define DEFAULT_PLAYER Status(6, 1, 20, 3, 1.5, 1)
 
 void
 runIA(Map *map, Character *monster, Character *player, std::vector<Character *> *otherMonsters,
@@ -26,13 +26,11 @@ runIA(Map *map, Character *monster, Character *player, std::vector<Character *> 
   int roundsDead = 0;
   int path[4] = {UP, RIGHT, DOWN, LEFT};
   while (*isRunning) {
-    fulss::down(CHARACTER_SEM);
     monster->revive(&roundsDead);
     if (!player->isEnemyInRange(monster)) {
       monster->generateEnemyMovement(&direction, &step);
       monster->moveEnemy(path[direction], *map, otherMonsters, items, player);
     }
-    fulss::up(CHARACTER_SEM);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 }
@@ -43,9 +41,9 @@ void runActions(Map *map, Character *player, std::vector<Character *> *monsters,
   int fightingMonster = -1;
 
   while (*isRunning) {
-    fulss::down(CHARACTER_SEM);
     fulio::inputStructure activeInputs = input->getInputs();
     if (activeInputs.getInput(fulio::QUIT)) break;
+    if (player->status.hp <= 0) continue;
     if (fightingMonster >= 0) {
       if (activeInputs.getInput(fulio::INTERACT)) {
         player->fight(monsters->at(fightingMonster), message, score);
@@ -53,27 +51,21 @@ void runActions(Map *map, Character *player, std::vector<Character *> *monsters,
         fightingMonster = -1;
       }
     } else {
-
       for (int j = 0; j < 4; j++) { // move actions
         action = activeInputs.getInput(j);
         if (action) {
-//          fulss::lock(CHARACTER_SEM);
           player->move(j, *map, monsters, items);
           *message = Character::getMoveMessage(j);
-//          fulss::unlock(CHARACTER_SEM);
         }
       }
       for (int i = 0; i < monsters->size(); i++) {
         if (monsters->at(i)->status.hp <= 0) continue;
-//        fulss::lock(CHARACTER_SEM);
         if (player->isEnemyInRange(monsters->at(i))) {
           fightingMonster = i;
           *message = "FIGHT!!! (press I)";
         }
-//        fulss::unlock(CHARACTER_SEM);
       }
     }
-    fulss::up(CHARACTER_SEM);
     std::this_thread::sleep_for(std::chrono::milliseconds(FRAME_TIME_IN_MILLIS));
   }
 

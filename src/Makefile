@@ -12,7 +12,7 @@ item.o: position.o
 	g++ $(flags) -c item.cpp -o bin/item.o
 
 map.o: position.o
-	g++ $(flags) -c map.cpp -o bin/map.o
+	g++ $(flags) -c map.cpp ../semaphore/bin/fulecoSimpleSemaphore.o -o bin/map.o
 
 position.o:
 	g++ $(flags) -c position.cpp -o bin/position.o

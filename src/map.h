@@ -12,7 +12,7 @@
 #include <vector>
 #include <array>
 #include "position.h"
-
+#include "../semaphore/src/fulecoSimpleSemaphore.h"
 
 #define MAP_SIZE_X 68
 #define MAP_SIZE_Y 19

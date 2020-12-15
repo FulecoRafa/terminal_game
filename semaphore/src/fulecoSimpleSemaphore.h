@@ -8,7 +8,6 @@
 #include <condition_variable>
 
 namespace fulss{
-
   // Semaphore
 
   bool create_semaphore(std::string name, unsigned int slots);
