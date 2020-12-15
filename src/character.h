@@ -8,6 +8,7 @@
 #include "item.h"
 #include "map.h"
 #include "position.h"
+#include "../semaphore/src/fulecoSimpleSemaphore.h"
 
 #ifndef TERMINAL_GAME_PLAYER_H
 #define TERMINAL_GAME_PLAYER_H
@@ -45,7 +46,7 @@ class Character {
   void move(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items);
 
   void moveEnemy(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items,
-            Character *player);
+                 Character *player);
 
   void useItem(const Item &item);
 
@@ -60,6 +61,10 @@ class Character {
   bool isEnemyInRange(Character *enemy);
 
   void lvlUp(std::string *message);
+
+  void revive(int *roundsDead);
+
+  void generateEnemyMovement(int *direction, int *step);
 };
 
 

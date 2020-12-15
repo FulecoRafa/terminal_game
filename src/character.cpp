@@ -73,7 +73,8 @@ Character::move(int direction, const Map &map, std::vector<Character *> *otherCh
   if (canMove(newPosition, map, otherCharacters, items)) this->position = newPosition;
 }
 
-void Character::moveEnemy(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items,
+void
+Character::moveEnemy(int direction, const Map &map, std::vector<Character *> *otherCharacters, std::vector<Item> *items,
                      Character *player) {
   Position newPosition = this->calculateNewPosition(direction);
   std::vector<Character> playerAux;
@@ -148,6 +149,22 @@ void Character::fight(Character *enemy, std::string *message, int *score) {
   status.xp += 2;
   *score += 10;
   this->lvlUp(message);
+}
+
+void Character::revive(int *roundsDead) {
+  if (this->status.hp <= 0) *roundsDead = *roundsDead + 1;
+  if (*roundsDead == 30) {
+    *roundsDead = 0;
+    this->status.hp = 20;
+  }
+}
+
+void Character::generateEnemyMovement(int *direction, int *step) {
+  if (*step == 3) { // troca direção
+    *step = 0;
+    *direction = (*direction + 1) % 4;
+  }
+  *step = *step + 1;
 }
 
 Status::Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier) {

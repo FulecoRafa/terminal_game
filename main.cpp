@@ -22,33 +22,18 @@ runIA(Map *map, Character *monster, Character *player, std::vector<Character *> 
       std::vector<Item> *items,
       bool *isRunning) {
   int direction = 0;
-  int range = 1;
-  bool isIncreasingRange = true;
+  int step = 0;
   int roundsDead = 0;
   int path[4] = {UP, RIGHT, DOWN, LEFT};
   while (*isRunning) {
-    if (monster->status.hp <= 0) roundsDead++;
-    if (roundsDead == 30) {
-      roundsDead = 0;
-      monster->status.hp = 20;
-    }
+    fulss::down(CHARACTER_SEM);
+    monster->revive(&roundsDead);
     if (!player->isEnemyInRange(monster)) {
-      if (direction == 3) {
-        if (range == 1) isIncreasingRange = true;
-        if (range == 3) isIncreasingRange = false;
-        if (isIncreasingRange) range = (range + 1) % 3;
-        else range = (range - 1) % 3;
-      }
-      for (int i = 0; i < range; i++) {
-//        fulss::lock(CHARACTER_SEM);
-        monster->moveEnemy(path[direction], *map, otherMonsters, items, player);
-//        fulss::unlock(CHARACTER_SEM);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-      }
-      direction = (direction + 1) % 4;
+      monster->generateEnemyMovement(&direction, &step);
+      monster->moveEnemy(path[direction], *map, otherMonsters, items, player);
     }
+    fulss::up(CHARACTER_SEM);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
   }
 }
 
@@ -58,7 +43,7 @@ void runActions(Map *map, Character *player, std::vector<Character *> *monsters,
   int fightingMonster = -1;
 
   while (*isRunning) {
-//    fulss::down(CHARACTER_SEM);
+    fulss::down(CHARACTER_SEM);
     fulio::inputStructure activeInputs = input->getInputs();
     if (activeInputs.getInput(fulio::QUIT)) break;
     if (fightingMonster >= 0) {
@@ -88,7 +73,7 @@ void runActions(Map *map, Character *player, std::vector<Character *> *monsters,
 //        fulss::unlock(CHARACTER_SEM);
       }
     }
-//    fulss::up(CHARACTER_SEM);
+    fulss::up(CHARACTER_SEM);
     std::this_thread::sleep_for(std::chrono::milliseconds(FRAME_TIME_IN_MILLIS));
   }
 
@@ -118,7 +103,6 @@ int main() {
   int score = 0;
   int monsters_thread = 2;
   fulss::create_semaphore(CHARACTER_SEM, 7);
-  fulss::create_mutex(CHARACTER_SEM);
   Map map = Map();
   std::string message;
   Character player = Character(Position(MAP_SIZE_Y - 2, MAP_SIZE_X / 2), DEFAULT_PLAYER);
