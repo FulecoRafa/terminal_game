@@ -171,12 +171,28 @@ void Character::revive(int *roundsDead) {
 void Character::generateEnemyMovement(int *direction, int *step) {
   std::random_device rd; // obtain a random number from hardware
   std::mt19937 gen(rd()); // seed the generator
-  std::uniform_int_distribution<> range(0,3); // define the range
+  std::uniform_int_distribution<> range(0, 3); // define the range
   if (*step == 3) { // troca direção
     *step = 0;
     *direction = range(gen);
   }
   *step = *step + 1;
+}
+
+void Character::waitForAction(Character *monster, std::string *message, int *score, int *fightingMonster) {
+  this->fight(monster, message, score);
+  monster->status.hp = 0;
+  *fightingMonster = -1;
+}
+
+void Character::checkFight(std::vector<Character *> *monsters, int *fightingMonster, std::string *message) {
+  for (int i = 0; i < monsters->size(); i++) {
+    if (monsters->at(i)->status.hp <= 0) continue;
+    if (this->isEnemyInRange(monsters->at(i))) {
+      *fightingMonster = i;
+      *message = "FIGHT!!! (press I)";
+    }
+  }
 }
 
 Status::Status(int _attack, int _defense, int _hp, int _mp, float _specialAbilityMultiplier, int _lvl) {

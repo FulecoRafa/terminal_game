@@ -67,6 +67,11 @@ class Character {
   void revive(int *roundsDead);
 
   void generateEnemyMovement(int *direction, int *step);
+
+  void waitForAction(Character *monster, std::string *message, int *score, int *fightingMonster);
+
+  void checkFight(std::vector<Character *> *monsters, int *fightingMonster, std::string *message);
+
 };
 
 
