@@ -1,1 +1,0 @@
-# Terminal Game - SO
